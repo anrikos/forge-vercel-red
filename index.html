@@ -548,8 +548,9 @@
                     if (apiKey) {
                         geminiOutput.textContent = 'Отправка запроса в Google Gemini через распределенный CORS-прокси...';
                         
-                        const model = 'gemini-3.8-flash';
-                        const targetUrl = `https://googleapis.com{model}:generateContent?key=${apiKey.trim()}`;
+                       const model = 'gemini-3.8-flash';
+const targetUrl = `https://googleapis.com{model}:generateContent?key=${apiKey.trim()}`;
+
                         
                         // Список надежных публичных прокси-серверов для обхода блокировки по IP
                         const proxies = [
