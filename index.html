@@ -10,13 +10,26 @@
         />
         <style>
             :root {
-                --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+                --bg-gradient: linear-gradient(
+                    135deg,
+                    #0f172a 0%,
+                    #1e1b4b 50%,
+                    #311042 100%
+                );
                 --panel-bg: rgba(30, 41, 59, 0.7);
                 --panel-border: rgba(255, 255, 255, 0.08);
                 --text-main: #f8fafc;
                 --text-muted: #94a3b8;
-                --accent-primary: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-                --accent-hover: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+                --accent-primary: linear-gradient(
+                    135deg,
+                    #6366f1 0%,
+                    #a855f7 100%
+                );
+                --accent-hover: linear-gradient(
+                    135deg,
+                    #4f46e5 0%,
+                    #9333ea 100%
+                );
                 --success-color: #10b981;
                 --input-bg: rgba(15, 23, 42, 0.6);
                 --mic-active: #ef4444;
@@ -46,7 +59,9 @@
                 width: 100%;
                 max-width: 640px;
                 padding: 35px;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                box-shadow:
+                    0 20px 40px rgba(0, 0, 0, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
             }
             h1 {
                 font-size: 28px;
@@ -153,9 +168,15 @@
                 color: #fff;
             }
             @keyframes pulse {
-                0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
-                70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-                100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+                0% {
+                    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
+                }
+                70% {
+                    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+                }
             }
             .btn-generate {
                 width: 100%;
@@ -208,7 +229,9 @@
                 gap: 5px;
                 transition: color 0.2s;
             }
-            .copy-btn:hover { color: var(--text-main); }
+            .copy-btn:hover {
+                color: var(--text-main);
+            }
             .prompt-output {
                 background: rgba(0, 0, 0, 0.2);
                 border-radius: 10px;
@@ -278,30 +301,62 @@
                 border: 1px solid var(--panel-border);
                 transition: all 0.2s;
             }
-            .btn-copy-all { background: rgba(255, 255, 255, 0.05); color: var(--text-main); }
-            .btn-copy-all:hover { background: rgba(255, 255, 255, 0.1); }
-            .btn-open-ai { background: #fff; color: #0f172a; }
-            .btn-open-ai:hover { background: #e2e8f0; }
+            .btn-copy-all {
+                background: rgba(255, 255, 255, 0.05);
+                color: var(--text-main);
+            }
+            .btn-copy-all:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+            .btn-open-ai {
+                background: #fff;
+                color: #0f172a;
+            }
+            .btn-open-ai:hover {
+                background: #e2e8f0;
+            }
         </style>
     </head>
     <body>
         <div class="app-container">
             <h1>
-                <i class="fa-solid fa-basket-shopping"></i> Prompt Market Analyzer
+                <i class="fa-solid fa-basket-shopping"></i> Prompt Market
+                Analyzer
             </h1>
             <div class="form-group">
-                <label for="api-key">Ключ Gemini API (сохраняется в браузере):</label>
+                <label for="api-key"
+                    >Ключ Gemini API (сохраняется в браузере):</label
+                >
                 <div class="api-key-container">
-                    <input type="text" id="api-key" placeholder="AIzaSy..." autocomplete="off" />
-                    <button id="save-key-btn" class="btn-save-key">Сохранить</button>
+                    <input
+                        type="text"
+                        id="api-key"
+                        placeholder="AIzaSy..."
+                        autocomplete="off"
+                    />
+                    <button id="save-key-btn" class="btn-save-key">
+                        Сохранить
+                    </button>
                 </div>
-                <div id="key-status" class="key-status-text">Ключ не сохранен</div>
+                <div id="key-status" class="key-status-text">
+                    Ключ не сохранен
+                </div>
             </div>
             <div class="form-group">
-                <label for="stores-input">Сетевые магазины (через запятую):</label>
+                <label for="stores-input"
+                    >Сетевые магазины (через запятую):</label
+                >
                 <div class="input-wrapper">
-                    <input type="text" id="stores-input" placeholder="Пятерочка, Магнит, Перекресток, Лента" />
-                    <button id="mic-stores" class="mic-btn" title="Голосовой ввод">
+                    <input
+                        type="text"
+                        id="stores-input"
+                        placeholder="Пятерочка, Магнит, Перекресток, Лента"
+                    />
+                    <button
+                        id="mic-stores"
+                        class="mic-btn"
+                        title="Голосовой ввод"
+                    >
                         <i class="fa fa-microphone"></i>
                     </button>
                 </div>
@@ -309,13 +364,22 @@
             <div class="form-group">
                 <label for="basket-input">Продуктовая корзина:</label>
                 <div class="input-wrapper">
-                    <textarea id="basket-input" placeholder="Молоко 1л, хлеб ржаной, яйца 10шт, куриное филе 1кг"></textarea>
-                    <button id="mic-basket" class="mic-btn" title="Голосовой ввод">
+                    <textarea
+                        id="basket-input"
+                        placeholder="Молоко 1л, хлеб ржаной, яйца 10шт, куриное филе 1кг"
+                    ></textarea>
+                    <button
+                        id="mic-basket"
+                        class="mic-btn"
+                        title="Голосовой ввод"
+                    >
                         <i class="fa fa-microphone"></i>
                     </button>
                 </div>
             </div>
-            <button id="btn-generate" class="btn-generate">Сформировать промпт</button>
+            <button id="btn-generate" class="btn-generate">
+                Сформировать промпт
+            </button>
             <div class="result-section">
                 <div class="result-header">
                     <div class="result-title">Готовый промпт для ИИ:</div>
@@ -323,7 +387,9 @@
                         <i class="fa-regular fa-copy"></i> Скопировать
                     </button>
                 </div>
-                <div id="prompt-output" class="prompt-output">Здесь появится ваш промпт...</div>
+                <div id="prompt-output" class="prompt-output">
+                    Здесь появится ваш промпт...
+                </div>
             </div>
             <div class="result-section">
                 <div class="result-header">
@@ -332,31 +398,46 @@
                         <i class="fa-regular fa-copy"></i> Скопировать ответ
                     </button>
                 </div>
-                <div id="gemini-output" class="prompt-output" style="border-left-color: var(--success-color)">
+                <div
+                    id="gemini-output"
+                    class="prompt-output"
+                    style="border-left-color: var(--success-color)"
+                >
                     Ожидание генерации промпта...
                 </div>
             </div>
             <label>Куда отправить:</label>
             <div class="platforms-grid">
                 <label class="platform-option">
-                    <input type="radio" name="platform" value="google" checked />
+                    <input
+                        type="radio"
+                        name="platform"
+                        value="google"
+                        checked
+                    />
                     <div>
                         <strong>Google AI</strong>
-                        <div style="font-size: 12px; color: var(--text-muted)">Поиск с ответами ИИ</div>
+                        <div style="font-size: 12px; color: var(--text-muted)">
+                            Поиск с ответами ИИ
+                        </div>
                     </div>
                 </label>
                 <label class="platform-option">
                     <input type="radio" name="platform" value="chatgpt" />
                     <div>
                         <strong>ChatGPT</strong>
-                        <div style="font-size: 12px; color: var(--text-muted)">Интерфейс OpenAI</div>
+                        <div style="font-size: 12px; color: var(--text-muted)">
+                            Интерфейс OpenAI
+                        </div>
                     </div>
                 </label>
                 <label class="platform-option">
                     <input type="radio" name="platform" value="copilot" />
                     <div>
                         <strong>Microsoft Copilot</strong>
-                        <div style="font-size: 12px; color: var(--text-muted)">Поисковый ассистент</div>
+                        <div style="font-size: 12px; color: var(--text-muted)">
+                            Поисковый ассистент
+                        </div>
                     </div>
                 </label>
             </div>
@@ -381,23 +462,26 @@
                 const btnGenerate = document.getElementById('btn-generate');
                 const promptOutput = document.getElementById('prompt-output');
                 const copyPromptBtn = document.getElementById('copy-prompt');
-                const copyResponseBtn = document.getElementById('copy-response');
-                const copyAllActionsBtn = document.getElementById('copy-all-actions');
+                const copyResponseBtn =
+                    document.getElementById('copy-response');
+                const copyAllActionsBtn =
+                    document.getElementById('copy-all-actions');
                 const openAiBtn = document.getElementById('open-ai-btn');
                 const geminiOutput = document.getElementById('gemini-output');
-                
+
                 const savedKey = localStorage.getItem('gemini_api_key');
                 if (savedKey) {
                     apiKeyInput.value = savedKey;
                     keyStatus.textContent = 'Ключ сохранен в памяти устройства';
                     keyStatus.style.color = 'var(--success-color)';
                 }
-                
+
                 saveKeyBtn.addEventListener('click', () => {
                     const key = apiKeyInput.value.trim();
                     if (key) {
                         localStorage.setItem('gemini_api_key', key);
-                        keyStatus.textContent = 'Ключ сохранен в памяти устройства';
+                        keyStatus.textContent =
+                            'Ключ сохранен в памяти устройства';
                         keyStatus.style.color = 'var(--success-color)';
                     } else {
                         localStorage.removeItem('gemini_api_key');
@@ -405,8 +489,9 @@
                         keyStatus.style.color = 'var(--mic-active)';
                     }
                 });
-                
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+                const SpeechRecognition =
+                    window.SpeechRecognition || window.webkitSpeechRecognition;
                 if (SpeechRecognition) {
                     const initSpeech = (button, targetInput) => {
                         const recognition = new SpeechRecognition();
@@ -419,11 +504,18 @@
                                 recognition.start();
                             }
                         });
-                        recognition.onstart = () => button.classList.add('recording');
-                        recognition.onend = () => button.classList.remove('recording');
+                        recognition.onstart = () =>
+                            button.classList.add('recording');
+                        recognition.onend = () =>
+                            button.classList.remove('recording');
                         recognition.onresult = (event) => {
-                            if (event.results && event.results[0] && event.results[0][0]) {
-                                const transcript = event.results[0][0].transcript;
+                            if (
+                                event.results &&
+                                event.results[0] &&
+                                event.results[0][0]
+                            ) {
+                                const transcript =
+                                    event.results[0][0].transcript;
                                 if (targetInput.value) {
                                     targetInput.value += ', ' + transcript;
                                 } else {
@@ -441,81 +533,176 @@
                         btn.style.cursor = 'not-allowed';
                     });
                 }
-                
+
                 btnGenerate.addEventListener('click', async () => {
                     const stores = storesInput.value.trim();
                     const basket = basketInput.value.trim();
                     if (!stores || !basket) {
-                        alert('Пожалуйста, заполните список магазинов и продуктовую корзину.');
+                        alert(
+                            'Пожалуйста, заполните список магазинов и продуктовую корзину.',
+                        );
                         return;
                     }
                     const structuralPrompt = `Проведи детальный анализ рынка для следующих торговых сетей: ${stores}.\nРассчитай примерную совокупную стоимость следующей продуктовой корзины: ${basket}.\nСравни цены, выдели наиболее выгодные позиции в каждой сети и дай итоговую рекомендацию для оптимизации бюджета закупок. Сделай ответ на русском языке.`;
                     promptOutput.textContent = structuralPrompt;
-                    
+
                     const apiKey = localStorage.getItem('gemini_api_key') || '';
                     if (apiKey) {
-                        geminiOutput.textContent = 'Отправка запроса в Google Gemini через прокси Vercel Edge...';
-                        const url = '/api/gemini';
+                        geminiOutput.textContent =
+                            'Отправка запроса в Google Gemini через распределенный CORS-прокси...';
+
+                        const model = 'gemini-3.8-flash';
+                        // Оригинальный адрес Google Gemini API
+                        const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`;
+
+                        // Используем стабильный и быстрый CORS-прокси AllOrigins для обхода блокировок Google
+                        const proxyUrl = `https://allorigins.win{encodeURIComponent(targetUrl)}`;
 
                         try {
-                            const response = await fetch(url, {
+                            // Формируем тело запроса для Gemini
+                            const geminiPayload = {
+                                contents: [
+                                    { parts: [{ text: structuralPrompt }] },
+                                ],
+                            };
+
+                            // Делаем запрос к прокси-серверу
+                            const response = await fetch(proxyUrl, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
-                                    'x-api-key': apiKey,
                                 },
-                                body: JSON.stringify({
-                                    contents: [
-                                        { parts: [{ text: structuralPrompt }] },
-                                    ],
-                                }),
+                                body: JSON.stringify(geminiPayload),
                             });
 
                             if (!response.ok) {
-                                const errorData = await response.json().catch(() => ({}));
-                                throw new Error(errorData.error?.message || `Код ошибки API: ${response.status}`);
+                                throw new Error(
+                                    `Ошибка прокси-сервера: ${response.status}`,
+                                );
                             }
-                            
-                            const geminiData = await response.json();
-                            
-                            if (geminiData.candidates && geminiData.candidates[0]?.content?.parts?.[0]?.text) {
-                                geminiOutput.textContent = geminiData.candidates[0].content.parts[0].text;
-                            } else if (geminiData.error) {
-                                geminiOutput.textContent = `Ошибка Gemini: ${geminiData.error.message}`;
+
+                            const proxyData = await response.json();
+                            // AllOrigins возвращает ответ от Google в виде строки внутри свойства contents
+                            const geminiData = JSON.parse(proxyData.contents);
+
+                            if (geminiData.error) {
+                                throw new Error(geminiData.error.message);
+                            }
+
+                            // Читаем и выводим ответ от Gemini
+                            if (
+                                geminiData.candidates &&
+                                geminiData.candidates[0]?.content?.parts?.[0]
+                                    ?.text
+                            ) {
+                                geminiOutput.textContent =
+                                    geminiData.candidates[0].content.parts[0].text;
                             } else {
-                                geminiOutput.textContent = 'Не удалось распознать структуру ответа API. Проверьте правильность токена.';
+                                geminiOutput.textContent =
+                                    'Не удалось распознать структуру ответа API. Проверьте правильность токена.';
                             }
                         } catch (err) {
-                            console.error('Ошибка выполнения запроса:', err);
-                            geminiOutput.textContent = `Ошибка выполнения: ${err.message}\n\nРЕЗЕРВНЫЙ РЕЖИМ АКТИВИРОВАН:\nВаш готовый промпт автоматически скопирован в буфер обмена!\n\nЧто делать:\n1. Выберите чат-бот ниже (например, ChatGPT).\n2. Нажмите кнопку «Открыть в ИИ» .\n3. Вставьте текст в нейросеть клавишами Ctrl+V.`;
-                            navigator.clipboard.writeText(structuralPrompt).catch(() => {});
+                            console.error(
+                                'Ошибка через прокси, пробуем прямой запрос:',
+                                err,
+                            );
+                            geminiOutput.textContent = `Запрос через прокси не удался. Пробуем сделать прямой запрос в Google API (может потребоваться VPN)...`;
+
+                            // Резервный вариант: если прокси AllOrigins перегружен, пробуем отправить напрямую (сработает с VPN)
+                            try {
+                                const directResponse = await fetch(targetUrl, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        contents: [
+                                            {
+                                                parts: [
+                                                    { text: structuralPrompt },
+                                                ],
+                                            },
+                                        ],
+                                    }),
+                                });
+                                const directData = await directResponse.json();
+                                if (
+                                    directData.candidates &&
+                                    directData.candidates[0]?.content
+                                        ?.parts?.[0]?.text
+                                ) {
+                                    geminiOutput.textContent =
+                                        directData.candidates[0].content.parts[0].text;
+                                    return;
+                                }
+                            } catch (directErr) {
+                                console.error(
+                                    'Прямой запрос тоже не удался:',
+                                    directErr,
+                                );
+                            }
+
+                            // Полный резервный режим, если сеть заблокирована
+                            geminiOutput.textContent = `Ошибка выполнения: ${err.message}\n\nРЕЗЕРВНЫЙ РЕЖИМ АКТИВИРОВАН:\nВаш готовый промпт автоматически скопирован в буфер обмена!\n\nЧто делать:\n1. Выберите чат-бот ниже (например, ChatGPT).\n2. Нажмите кнопку «Открыть в ИИ».\n3. Вставьте текст в нейросеть клавишами Ctrl+V.`;
+                            navigator.clipboard
+                                .writeText(structuralPrompt)
+                                .catch(() => {});
                         }
                     } else {
-                        geminiOutput.textContent = 'Введите и сохраните API ключ выше, чтобы получать ответы прямо в интерфейсе.';
+                        geminiOutput.textContent =
+                            'Введите и сохраните API ключ выше, чтобы получать ответы прямо в интерфейсе.';
                     }
                 });
-                
-                const copyToClipboard = (text, message = 'Успешно скопировано!') => {
-                    if (!text || text.startsWith('Здесь появится') || text.startsWith('Ожидание генерации')) return;
-                    navigator.clipboard.writeText(text).then(() => alert(message));
+
+                const copyToClipboard = (
+                    text,
+                    message = 'Успешно скопировано!',
+                ) => {
+                    if (
+                        !text ||
+                        text.startsWith('Здесь появится') ||
+                        text.startsWith('Ожидание генерации')
+                    )
+                        return;
+                    navigator.clipboard
+                        .writeText(text)
+                        .then(() => alert(message));
                 };
-                
-                copyPromptBtn.addEventListener('click', () => copyToClipboard(promptOutput.textContent));
-                copyResponseBtn.addEventListener('click', () => copyToClipboard(geminiOutput.textContent));
-                copyAllActionsBtn.addEventListener('click', () => copyToClipboard(promptOutput.textContent, 'Промпт скопирован!'));
-                
+
+                copyPromptBtn.addEventListener('click', () =>
+                    copyToClipboard(promptOutput.textContent),
+                );
+                copyResponseBtn.addEventListener('click', () =>
+                    copyToClipboard(geminiOutput.textContent),
+                );
+                copyAllActionsBtn.addEventListener('click', () =>
+                    copyToClipboard(
+                        promptOutput.textContent,
+                        'Промпт скопирован!',
+                    ),
+                );
+
                 openAiBtn.addEventListener('click', () => {
                     const currentPrompt = promptOutput.textContent;
-                    if (!currentPrompt || currentPrompt.startsWith('Здесь появится')) {
+                    if (
+                        !currentPrompt ||
+                        currentPrompt.startsWith('Здесь появится')
+                    ) {
                         alert('Сначала сформируйте промпт!');
                         return;
                     }
-                    const activePlatformRadio = document.querySelector('input[name="platform"]:checked');
-                    const platform = activePlatformRadio ? activePlatformRadio.value : 'google';
+                    const activePlatformRadio = document.querySelector(
+                        'input[name="platform"]:checked',
+                    );
+                    const platform = activePlatformRadio
+                        ? activePlatformRadio.value
+                        : 'google';
                     const encodedPrompt = encodeURIComponent(currentPrompt);
                     let targetUrl = `https://www.google.com/search?q=${encodedPrompt}`;
-                    if (platform === 'chatgpt') targetUrl = `https://chatgpt.com/?q=${encodedPrompt}`;
-                    if (platform === 'copilot') targetUrl = `https://copilot.microsoft.com/?q=${encodedPrompt}`;
+                    if (platform === 'chatgpt')
+                        targetUrl = `https://chatgpt.com/?q=${encodedPrompt}`;
+                    if (platform === 'copilot')
+                        targetUrl = `https://copilot.microsoft.com/?q=${encodedPrompt}`;
                     window.open(targetUrl, '_blank');
                 });
             });
