@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Prompt Market Analyzer</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css"
+        />
+        <style>
+            :root {
+                --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+                --panel-bg: rgba(30, 41, 59, 0.7);
+                --panel-border: rgba(255, 255, 255, 0.08);
+                --text-main: #f8fafc;
+                --text-muted: #94a3b8;
+                --accent-primary: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+                --accent-hover: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+                --success-color: #10b981;
+                --input-bg: rgba(15, 23, 42, 0.6);
+                --mic-active: #ef4444;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            }
+            body {
+                background: var(--bg-gradient);
+                background-attachment: fixed;
+                color: var(--text-main);
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+            }
+            .app-container {
+                background: var(--panel-bg);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid var(--panel-border);
+                border-radius: 24px;
+                width: 100%;
+                max-width: 640px;
+                padding: 35px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            }
+            h1 {
+                font-size: 28px;
+                font-weight: 700;
+                text-align: center;
+                margin-bottom: 30px;
+                background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+            }
+            .form-group {
+                margin-bottom: 24px;
+                position: relative;
+            }
+            label {
+                display: block;
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--text-muted);
+                margin-bottom: 8px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            .input-wrapper {
+                position: relative;
+                display: flex;
+                align-items: center;
+            }
+            input[type='text'],
+            textarea {
+                width: 100%;
+                background: var(--input-bg);
+                border: 1px solid var(--panel-border);
+                border-radius: 14px;
+                padding: 14px 50px 14px 16px;
+                color: var(--text-main);
+                font-size: 15px;
+                transition: all 0.3s ease;
+                outline: none;
+            }
+            textarea {
+                resize: vertical;
+                min-height: 100px;
+                line-height: 1.5;
+            }
+            input[type='text']:focus,
+            textarea:focus {
+                border-color: #818cf8;
+                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+                background: rgba(15, 23, 42, 0.8);
+            }
+            .api-key-container {
+                display: flex;
+                gap: 10px;
+                margin-top: 5px;
+            }
+            .btn-save-key {
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid var(--panel-border);
+                color: var(--text-main);
+                border-radius: 14px;
+                padding: 0 16px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: background 0.2s;
+            }
+            .btn-save-key:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+            .key-status-text {
+                font-size: 12px;
+                margin-top: 6px;
+                color: var(--text-muted);
+            }
+            .mic-btn {
+                position: absolute;
+                right: 12px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                color: var(--text-main);
+                transition: all 0.3s ease;
+                font-size: 16px;
+                z-index: 10;
+            }
+            .mic-btn:hover {
+                background: rgba(255, 255, 255, 0.15);
+                transform: scale(1.05);
+            }
+            .mic-btn.recording {
+                background: var(--mic-active);
+                border-color: transparent;
+                animation: pulse 1.5s infinite;
+                color: #fff;
+            }
+            @keyframes pulse {
+                0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+                70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+            }
+            .btn-generate {
+                width: 100%;
+                background: var(--accent-primary);
+                border: none;
+                border-radius: 14px;
+                padding: 16px;
+                font-size: 16px;
+                font-weight: 600;
+                color: #fff;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+                margin-bottom: 30px;
+            }
+            .btn-generate:hover {
+                background: var(--accent-hover);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
+            }
+            .result-section {
+                background: rgba(15, 23, 42, 0.4);
+                border: 1px solid var(--panel-border);
+                border-radius: 16px;
+                padding: 20px;
+                margin-bottom: 24px;
+                position: relative;
+            }
+            .result-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+            }
+            .result-title {
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            .copy-btn {
+                background: transparent;
+                border: none;
+                color: var(--text-muted);
+                cursor: pointer;
+                font-size: 13px;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                transition: color 0.2s;
+            }
+            .copy-btn:hover { color: var(--text-main); }
+            .prompt-output {
+                background: rgba(0, 0, 0, 0.2);
+                border-radius: 10px;
+                padding: 14px;
+                font-size: 14px;
+                line-height: 1.6;
+                color: #e2e8f0;
+                white-space: pre-wrap;
+                min-height: 60px;
+                border-left: 3px solid #a855f7;
+            }
+            .platforms-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-top: 12px;
+                margin-bottom: 24px;
+            }
+            .platform-option {
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid var(--panel-border);
+                border-radius: 14px;
+                padding: 14px 16px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            .platform-option:hover {
+                background: rgba(255, 255, 255, 0.07);
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+            .platform-option input[type='radio'] {
+                appearance: none;
+                -webkit-appearance: none;
+                width: 18px;
+                height: 18px;
+                border: 2px solid var(--text-muted);
+                border-radius: 50%;
+                outline: none;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s ease;
+            }
+            .platform-option input[type='radio']:checked {
+                border-color: #a855f7;
+                background: #a855f7;
+                box-shadow: inset 0 0 0 3px #1e1b4b;
+            }
+            .action-footer {
+                display: flex;
+                gap: 12px;
+            }
+            .btn-action {
+                flex: 1;
+                padding: 14px;
+                border-radius: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 8px;
+                border: 1px solid var(--panel-border);
+                transition: all 0.2s;
+            }
+            .btn-copy-all { background: rgba(255, 255, 255, 0.05); color: var(--text-main); }
+            .btn-copy-all:hover { background: rgba(255, 255, 255, 0.1); }
+            .btn-open-ai { background: #fff; color: #0f172a; }
+            .btn-open-ai:hover { background: #e2e8f0; }
+        </style>
+    </head>
+    <body>
+        <div class="app-container">
+            <h1>
+                <i class="fa-solid fa-basket-shopping"></i> Prompt Market Analyzer
+            </h1>
+            <div class="form-group">
+                <label for="api-key">Ключ Gemini API (сохраняется в браузере):</label>
+                <div class="api-key-container">
+                    <input type="text" id="api-key" placeholder="AIzaSy..." autocomplete="off" />
+                    <button id="save-key-btn" class="btn-save-key">Сохранить</button>
+                </div>
+                <div id="key-status" class="key-status-text">Ключ не сохранен</div>
+            </div>
+            <div class="form-group">
+                <label for="stores-input">Сетевые магазины (через запятую):</label>
+                <div class="input-wrapper">
+                    <input type="text" id="stores-input" placeholder="Пятерочка, Магнит, Перекресток, Лента" />
+                    <button id="mic-stores" class="mic-btn" title="Голосовой ввод">
+                        <i class="fa fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="basket-input">Продуктовая корзина:</label>
+                <div class="input-wrapper">
+                    <textarea id="basket-input" placeholder="Молоко 1л, хлеб ржаной, яйца 10шт, куриное филе 1кг"></textarea>
+                    <button id="mic-basket" class="mic-btn" title="Голосовой ввод">
+                        <i class="fa fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+            <button id="btn-generate" class="btn-generate">Сформировать промпт</button>
+            <div class="result-section">
+                <div class="result-header">
+                    <div class="result-title">Готовый промпт для ИИ:</div>
+                    <button id="copy-prompt" class="copy-btn">
+                        <i class="fa-regular fa-copy"></i> Скопировать
+                    </button>
+                </div>
+                <div id="prompt-output" class="prompt-output">Здесь появится ваш промпт...</div>
+            </div>
+            <div class="result-section">
+                <div class="result-header">
+                    <div class="result-title">Ответ от Google Gemini:</div>
+                    <button id="copy-response" class="copy-btn">
+                        <i class="fa-regular fa-copy"></i> Скопировать ответ
+                    </button>
+                </div>
+                <div id="gemini-output" class="prompt-output" style="border-left-color: var(--success-color)">
+                    Ожидание генерации промпта...
+                </div>
+            </div>
+            <label>Куда отправить:</label>
+            <div class="platforms-grid">
+                <label class="platform-option">
+                    <input type="radio" name="platform" value="google" checked />
+                    <div>
+                        <strong>Google AI</strong>
+                        <div style="font-size: 12px; color: var(--text-muted)">Поиск с ответами ИИ</div>
+                    </div>
+                </label>
+                <label class="platform-option">
+                    <input type="radio" name="platform" value="chatgpt" />
+                    <div>
+                        <strong>ChatGPT</strong>
+                        <div style="font-size: 12px; color: var(--text-muted)">Интерфейс OpenAI</div>
+                    </div>
+                </label>
+                <label class="platform-option">
+                    <input type="radio" name="platform" value="copilot" />
+                    <div>
+                        <strong>Microsoft Copilot</strong>
+                        <div style="font-size: 12px; color: var(--text-muted)">Поисковый ассистент</div>
+                    </div>
+                </label>
+            </div>
+            <div class="action-footer">
+                <button id="copy-all-actions" class="btn-action btn-copy-all">
+                    <i class="fa-regular fa-clipboard"></i> Копировать
+                </button>
+                <button id="open-ai-btn" class="btn-action btn-open-ai">
+                    <i class="fa-solid fa-rocket"></i> Открыть в ИИ
+                </button>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const apiKeyInput = document.getElementById('api-key');
+                const saveKeyBtn = document.getElementById('save-key-btn');
+                const keyStatus = document.getElementById('key-status');
+                const storesInput = document.getElementById('stores-input');
+                const basketInput = document.getElementById('basket-input');
+                const micStoresBtn = document.getElementById('mic-stores');
+                const micBasketBtn = document.getElementById('mic-basket');
+                const btnGenerate = document.getElementById('btn-generate');
+                const promptOutput = document.getElementById('prompt-output');
+                const copyPromptBtn = document.getElementById('copy-prompt');
+                const copyResponseBtn = document.getElementById('copy-response');
+                const copyAllActionsBtn = document.getElementById('copy-all-actions');
+                const openAiBtn = document.getElementById('open-ai-btn');
+                const geminiOutput = document.getElementById('gemini-output');
+                
+                const savedKey = localStorage.getItem('gemini_api_key');
+                if (savedKey) {
+                    apiKeyInput.value = savedKey;
+                    keyStatus.textContent = 'Ключ сохранен в памяти устройства';
+                    keyStatus.style.color = 'var(--success-color)';
+                }
+                
+                saveKeyBtn.addEventListener('click', () => {
+                    const key = apiKeyInput.value.trim();
+                    if (key) {
+                        localStorage.setItem('gemini_api_key', key);
+                        keyStatus.textContent = 'Ключ сохранен в памяти устройства';
+                        keyStatus.style.color = 'var(--success-color)';
+                    } else {
+                        localStorage.removeItem('gemini_api_key');
+                        keyStatus.textContent = 'Ключ удален';
+                        keyStatus.style.color = 'var(--mic-active)';
+                    }
+                });
+                
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (SpeechRecognition) {
+                    const initSpeech = (button, targetInput) => {
+                        const recognition = new SpeechRecognition();
+                        recognition.lang = 'ru-RU';
+                        recognition.interimResults = false;
+                        button.addEventListener('click', () => {
+                            if (button.classList.contains('recording')) {
+                                recognition.stop();
+                            } else {
+                                recognition.start();
+                            }
+                        });
+                        recognition.onstart = () => button.classList.add('recording');
+                        recognition.onend = () => button.classList.remove('recording');
+                        recognition.onresult = (event) => {
+                            if (event.results && event.results[0] && event.results[0][0]) {
+                                const transcript = event.results[0][0].transcript;
+                                if (targetInput.value) {
+                                    targetInput.value += ', ' + transcript;
+                                } else {
+                                    targetInput.value = transcript;
+                                }
+                                targetInput.dispatchEvent(new Event('input'));
+                            }
+                        };
+                    };
+                    initSpeech(micStoresBtn, storesInput);
+                    initSpeech(micBasketBtn, basketInput);
+                } else {
+                    [micStoresBtn, micBasketBtn].forEach((btn) => {
+                        btn.style.opacity = '0.4';
+                        btn.style.cursor = 'not-allowed';
+                    });
+                }
+                
+                btnGenerate.addEventListener('click', async () => {
+                    const stores = storesInput.value.trim();
+                    const basket = basketInput.value.trim();
+                    if (!stores || !basket) {
+                        alert('Пожалуйста, заполните список магазинов и продуктовую корзину.');
+                        return;
+                    }
+                    const structuralPrompt = `Проведи детальный анализ рынка для следующих торговых сетей: ${stores}.\nРассчитай примерную совокупную стоимость следующей продуктовой корзины: ${basket}.\nСравни цены, выдели наиболее выгодные позиции в каждой сети и дай итоговую рекомендацию для оптимизации бюджета закупок. Сделай ответ на русском языке.`;
+                    promptOutput.textContent = structuralPrompt;
+                    
+                    const apiKey = localStorage.getItem('gemini_api_key') || '';
+                    if (apiKey) {
+                        geminiOutput.textContent = 'Отправка запроса в Google Gemini через прокси Vercel Edge...';
+                        const url = '/api/gemini';
+
+                        try {
+                            const response = await fetch(url, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'x-api-key': apiKey,
+                                },
+                                body: JSON.stringify({
+                                    contents: [
+                                        { parts: [{ text: structuralPrompt }] },
+                                    ],
+                                }),
+                            });
+
+                            if (!response.ok) {
+                                const errorData = await response.json().catch(() => ({}));
+                                throw new Error(errorData.error?.message || `Код ошибки API: ${response.status}`);
+                            }
+                            
+                            const geminiData = await response.json();
+                            
+                            if (geminiData.candidates && geminiData.candidates[0]?.content?.parts?.[0]?.text) {
+                                geminiOutput.textContent = geminiData.candidates[0].content.parts[0].text;
+                            } else if (geminiData.error) {
+                                geminiOutput.textContent = `Ошибка Gemini: ${geminiData.error.message}`;
+                            } else {
+                                geminiOutput.textContent = 'Не удалось распознать структуру ответа API. Проверьте правильность токена.';
+                            }
+                        } catch (err) {
+                            console.error('Ошибка выполнения запроса:', err);
+                            geminiOutput.textContent = `Ошибка выполнения: ${err.message}\n\nРЕЗЕРВНЫЙ РЕЖИМ АКТИВИРОВАН:\nВаш готовый промпт автоматически скопирован в буфер обмена!\n\nЧто делать:\n1. Выберите чат-бот ниже (например, ChatGPT).\n2. Нажмите кнопку «Открыть в ИИ» .\n3. Вставьте текст в нейросеть клавишами Ctrl+V.`;
+                            navigator.clipboard.writeText(structuralPrompt).catch(() => {});
+                        }
+                    } else {
+                        geminiOutput.textContent = 'Введите и сохраните API ключ выше, чтобы получать ответы прямо в интерфейсе.';
+                    }
+                });
+                
+                const copyToClipboard = (text, message = 'Успешно скопировано!') => {
+                    if (!text || text.startsWith('Здесь появится') || text.startsWith('Ожидание генерации')) return;
+                    navigator.clipboard.writeText(text).then(() => alert(message));
+                };
+                
+                copyPromptBtn.addEventListener('click', () => copyToClipboard(promptOutput.textContent));
+                copyResponseBtn.addEventListener('click', () => copyToClipboard(geminiOutput.textContent));
+                copyAllActionsBtn.addEventListener('click', () => copyToClipboard(promptOutput.textContent, 'Промпт скопирован!'));
+                
+                openAiBtn.addEventListener('click', () => {
+                    const currentPrompt = promptOutput.textContent;
+                    if (!currentPrompt || currentPrompt.startsWith('Здесь появится')) {
+                        alert('Сначала сформируйте промпт!');
+                        return;
+                    }
+                    const activePlatformRadio = document.querySelector('input[name="platform"]:checked');
+                    const platform = activePlatformRadio ? activePlatformRadio.value : 'google';
+                    const encodedPrompt = encodeURIComponent(currentPrompt);
+                    let targetUrl = `https://www.google.com/search?q=${encodedPrompt}`;
+                    if (platform === 'chatgpt') targetUrl = `https://chatgpt.com/?q=${encodedPrompt}`;
+                    if (platform === 'copilot') targetUrl = `https://copilot.microsoft.com/?q=${encodedPrompt}`;
+                    window.open(targetUrl, '_blank');
+                });
+            });
+        </script>
+    </body>
+</html>
